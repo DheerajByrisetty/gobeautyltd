@@ -1,1 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Beauty Limited</title>
+    <!-- Boxiocns CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+    <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <!-- ag-Grid Styles -->
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-alpine.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css"/>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+    <div class="sidebar" id="sidebar">
+    <div class="logo">
+    <img src="favicon/apple-touch-icon.png" alt="Logo" style="width:60px; height:60px;">
+    </div>
+        <div class="icon-container">
+            <i class="icon fa-solid fa-list"></i>
+            <i class="icon fa fa-arrow-right-to-bracket" onclick="toggleSidebar('arrow-right-to-bracket')"></i>
+            <i class="icon fa fa-arrow-right-from-bracket" onclick="toggleSidebar('arrow-right-from-bracket')"></i>
+            <i class="icon fa fa-user" onclick="toggleSidebar('user')"></i>
+            <i class="icon fa fa-cog" onclick="toggleSidebar('cog')"></i>
+        </div>
+        <div class="extended-sidebar" id="extendedSidebar">
+            <div class="content" id="arrow-right-to-bracketContent">
+                <div class="header">
+                    <label>IN BOUND MANAGEMENT</label>
+                    <i class="fa fa-bars" style="font-size: 18px;" onclick="closeSidebar()"></i>
+                </div>
+                <ul>
+                    <li><i class="fa-solid fa-user-plus"></i> Create In-Vendor</li>
+                    <li><i class="fa-regular fa-money-bill-1"></i> Purchase Orders</li>
+                    <li><i class="fa-solid fa-receipt"></i> Warehouse Receipts</li>
+                    <li><i class="fa-solid fa-cubes"></i> Stock Control</li>
+                </ul>
+            </div>
+            <div class="content" id="arrow-right-from-bracketContent">
+                <div class="header">
+                    <label>OUT BOUND MANAGEMENT</label>
+                    <i class="fa fa-bars" style="font-size: 18px;" onclick="closeSidebar()"></i>
+                </div>
+                <ul>
+                    <li><i class="fa-solid fa-user-plus"></i> Create Out-Vendor</li>
+                    <li><i class="fa-regular fa-money-bill-1"></i> Purchase Orders</li>
+                    <li><i class="fa-solid fa-receipt"></i> Warehouse Receipts</li>
+                    <li><i class="fa-solid fa-cubes"></i> Stock Control</li>
+                </ul>
+            </div>
+            <div class="content" id="userContent">
+                <div class="header">
+                    <label>USERS REGISTRATION</label>
+                    <i class="fa fa-bars" style="font-size: 18px;" onclick="closeSidebar()"></i>
+                </div>
+                <ul>
+                    <li><i class="fa fa-user"></i> Create User</li>
+                </ul>
+            </div>
+            <div class="content" id="cogContent">
+                <div class="header">
+                    <label>PROFILE SETTINGS</label>
+                    <i class="fa fa-bars" style="font-size: 18px;" onclick="closeSidebar()"></i>
+                </div>
+                <ul>
+                    <li><i class="fa fa-cog"></i> User Profile</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <main id="mainContent">
+    <section class="home-section">
+                <div class="home-content">
+                <span class="text" style="margin-left: 20px;">Inbound / Create Vendor</span>
+                </div>
+                <div id="tab-container">
+                <span class="view-by">VIEW BY</span>
+                <button class="tab-button active" data-status="all">All <span class="tab-badge row-count all-count">0</span></button>
+                <button class="tab-button" data-status="Active">Active <span class="tab-badge row-count active-count">0</span></button>
+                <button class="tab-button" data-status="Inactive">Inactive <span class="tab-badge row-count inactive-count">0</span></button>
+                <button class="tab-button" data-status="Pending">Pending <span class="tab-badge row-count pending-count">0</span></button>
+                </div>
+                <div id="controls-container">
+                <div id="columnDropdown" class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle bg-white" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #9517AF;margin-left:10px;">
+                        <i class="fa-solid fa-sliders" style="color: #9517AF;"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="columnSelectionMenu">
+                        <!-- Column checkboxes will be dynamically added here -->
+                    </ul>
+                </div>
+                <input type="text" id="search-input" placeholder="Search...">
+                <button id="export-csv-btn" class="btn btn-light" style="background: white; color: #776097;"><i class="fa-regular fa-circle-down" style="color: #13b4dd;"></i> Download</button>
+                <button id="mark-active" class="btn btn-light" style="margin-left:10px; background: white; color: #776097;"><i class="fa-regular fa-circle-check" style="color: #2e7c03;"></i> Mark as Active</button>
+                <button id="mark-Inactive" class="btn btn-light" style="margin-left:10px; background: white; color: #776097;"><i class="fa-solid fa-user-large-slash" style="color: #e10505;"></i> Mark as Inactive</button>
+                <button id="edit" class="btn btn-light" style="margin-left:10px; background: white; color: #776097;" disabled><i class="fa-regular fa-pen-to-square" style="color: #f0b000;"></i> Edit</button>
+                <button id="delete" class="btn btn-light" style="margin-left:10px; background: white; color: #776097;"><i class="fa-regular fa-trash-can" style="color: #e10505;"></i> Delete</button>
+                <button id="create-vendor-btn" class="btn" style="background: #9517AF; color: white; font-weight:500;"><i class='fa fa-user-plus'></i>  Create Vendor</button>
+                </div>
+                <div id="app-container">
+                <div id="app" class="ag-theme-quartz"></div>
+            </div>
+  </section>
+</main>
+
+
+<!-- Bootstrap Modal -->
+<div class="modal" id="createVendorModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Vendor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="vendorName" class="form-label"><i class='bx bxs-user'></i> Vendor Name</label>
+                                <input type="text" class="form-control form-control-sm" id="vendorName" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label"><i class='bx bxs-envelope'></i> Email</label>
+                                <input type="email" class="form-control form-control-sm" id="email" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="country" class="form-label"><i class='bx bxs-flag'></i> Country</label>
+                            <select class="form-select form-select-sm" id="country" required>
+                                <option value=""></option>
+                                <!-- Options will be dynamically added here -->
+                            </select>
+                        </div>
+                    </div>
+                        <div class="col-md-2">
+                            <div class="mb-3">
+                                <label for="countryCode" class="form-label"><i class='bx bxs-globe'></i>Code</label>
+                                <select class="form-select form-select-sm" id="countryCode" required>
+                                    <option value=""></option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="mobile" class="form-label"><i class='bx bxs-phone'></i> Mobile Number</label>
+                                <div class="input-group">
+                                    <input type="tel" class="form-control form-control-sm" id="mobile" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="mb-3">
+                                <label for="address" class="form-label"><i class='bx bxs-map'></i> Address</label>
+                                <input type="text" class="form-control form-control-sm" id="address" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="pincode" class="form-label"><i class='bx bxs-map-pin'></i> Pincode</label>
+                                <input type="text" class="form-control form-control-sm" id="pincode" required>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div id="alertMessage" style="display: none;">Vendor name already exists !</div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="Submit" class="btn" style="background: #9517AF; color: white; font-weight:500;" onclick="submitForm()">Submit Vendor</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Vendor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group mb-3">
+          <label for="vendor-id-input">Vendor ID:</label>
+          <input type="text" class="form-control" id="vendor-id-input" readonly>
+        </div>
+        <div class="form-group mb-3">
+          <label for="vendor-name-input">Vendor Name:</label>
+          <input type="text" class="form-control" id="vendor-name-input" readonly>
+        </div>
+        <div class="form-group mb-3">
+          <label for="email-input">Email:</label>
+          <input type="email" class="form-control" id="email-input">
+        </div>
+        <div class="form-group mb-3">
+          <label for="mobile-input">Mobile:</label>
+          <input type="text" class="form-control" id="mobile-input">
+        </div>
+        <div class="form-group mb-3">
+          <label for="address-input">Address:</label>
+          <input type="text" class="form-control" id="address-input">
+        </div>
+        <div class="form-group mb-3">
+          <label for="pincode-input">Pincode:</label>
+          <input type="text" class="form-control" id="pincode-input">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn" style="background: #9517AF; color: white; font-weight:500;" id="save-btn">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div id="viewModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Vendor Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <th>Vendor ID</th>
+                        <td id="vendorId"></td>
+                    </tr>
+                    <tr>
+                        <th>Vendor Name</th>
+                        <td id="vendorName"></td>
+                    </tr>
+                    <tr>
+                        <th>Mobile</th>
+                        <td id="mobile"></td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td id="email"></td>
+                    </tr>
+                    <!-- Add more rows for additional fields as needed -->
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+
+<!-- ag-Grid library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/31.3.1/ag-grid-community.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+<!-- Firebase library -->
+<!-- Include Firebase SDK without modules -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+<script>
+    // Initialize Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyA2en9x1Y2B1Rt0zqN3QdaU2XgR-N5LXL0",
+        authDomain: "miep-252e6.firebaseapp.com",
+        databaseURL: "https://miep-252e6-default-rtdb.firebaseio.com",
+        projectId: "miep-252e6",
+        storageBucket: "miep-252e6.appspot.com",
+        messagingSenderId: "1028278147290",
+        appId: "1:1028278147290:web:a0cf024e53dc70b017ede3",
+        measurementId: "G-QZ3H922BE1"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+ // Reference to the Countries collection
+    const countriesRef = firebase.database().ref('Countries');
+
+    // Function to fetch countries and populate the select elements
+    function populateCountries() {
+        countriesRef.once('value', (snapshot) => {
+            const countries = snapshot.val();
+            const countrySelect = document.getElementById('country');
+            const countryCodeSelect = document.getElementById('countryCode');
+
+            // Clear existing options
+            countrySelect.innerHTML = '<option value=""></option>';
+            countryCodeSelect.innerHTML = '<option value=""></option>';
+
+            // Add options for each country
+            for (const key in countries) {
+                if (countries.hasOwnProperty(key)) {
+                    const country = countries[key];
+                    const option = document.createElement('option');
+                    option.value = country.Code + " " + country.Country;
+                    option.textContent = "(" + country.Code + ")" + " " + country.Country;
+                    countrySelect.appendChild(option);
+
+                    const codeOption = document.createElement('option');
+                    codeOption.value = country.PhCode; // Fetching country code from 'PhCode' column
+                    codeOption.textContent = country.PhCode;
+                    countryCodeSelect.appendChild(codeOption);
+                }
+            }
+        });
+    }
+
+    // Call the function to populate countries when modal is shown
+    document.getElementById('createVendorModal').addEventListener('show.bs.modal', function () {
+        populateCountries();
+    });
+
+// Function to handle country selection and update country code
+document.getElementById('country').addEventListener('change', function () {
+    const selectedCountry = this.value.split(" ")[0]; // Extracting country code from the selected value
+    const countryCodeSelect = document.getElementById('countryCode');
+    
+    // Clear existing options
+    countryCodeSelect.innerHTML = '<option value=""></option>';
+    
+    // Reference to the Countries collection
+    const countriesRef = firebase.database().ref('Countries');
+    
+    // Fetch the selected country data
+    countriesRef.once('value', (snapshot) => {
+        const countryData = snapshot.val();
+        for (const key in countryData) {
+            if (countryData.hasOwnProperty(key) && countryData[key].Code === selectedCountry) {
+                const option = document.createElement('option');
+                option.value = countryData[key].PhCode; // Fetching country code from 'PhCode' column
+                option.textContent = countryData[key].PhCode;
+                countryCodeSelect.appendChild(option);
+                break; // Exit loop once the specific country code is found
+            }
+        }
+    });
+});
+
+</script>
+
+    <script>
+
+// Function to generate a unique vendor ID
+async function generateVendorId() {
+    const database = firebase.database();
+    const vendorsRef = database.ref('vendors');
+
+    let highestNumber = 0;
+
+    // Query the database to find the highest number from vendorIds
+    await vendorsRef.orderByChild('vendorId').limitToLast(1).once('value', snapshot => {
+        snapshot.forEach(childSnapshot => {
+            const vendorId = childSnapshot.val().vendorId;
+            const vendorNumber = parseInt(vendorId.split('-')[2]);
+            if (vendorNumber > highestNumber) {
+                highestNumber = vendorNumber;
+            }
+        });
+    });
+
+    // Generate the vendor ID by incrementing the highest number
+    const paddedNumber = String(highestNumber + 1).padStart(5, '0');
+    const vendorId = `GBL-V-${paddedNumber}`;
+
+    return vendorId;
+}
+
+  // Function to handle form submission
+async function submitForm() {
+    // Retrieve form data
+    const vendorName = document.getElementById('vendorName').value;
+    const email = document.getElementById('email').value;
+    const countryCode = document.getElementById('countryCode').value;
+    const mobile = document.getElementById('mobile').value;
+    const address = document.getElementById('address').value;
+    const pincode = document.getElementById('pincode').value;
+    const country = document.getElementById('country').value;
+
+    // Check if all required fields have data
+    if (!vendorName || !email || !countryCode || !mobile || !address || !pincode || !country) {
+        alert('Please fill in all required fields');
+        return;
+    }
+
+    // Generate a unique vendor ID
+    const vendorId = await generateVendorId();
+
+// Get current date and time
+const currentDate = new Date();
+
+// Extract date components
+const day = String(currentDate.getDate()).padStart(2, '0');
+const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero based
+const year = currentDate.getFullYear();
+
+// Extract time components
+const hours = String(currentDate.getHours()).padStart(2, '0');
+const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+
+// Format the date and time
+const formattedDate = `${day}-${month}-${year}, ${hours}:${minutes}`;
+
+
+    // Set status to "pending"
+    const status = 'Pending';
+    const submitter = 'Admin';
+
+    // Send data to Firebase Realtime Database
+    const newVendorRef = vendorsRef.push();
+    newVendorRef.set({
+        vendorId: vendorId,
+        vendorName: vendorName,
+        email: email,
+        countryCode: countryCode,
+        mobile: mobile,
+        address: address,
+        pincode: pincode,
+        country: country,
+        status: status,
+        createdAt: formattedDate,
+        lastModified : formattedDate,
+        submitter: submitter // Include creation date and time
+    });
+
+    alert('Vendor added successfully!');
+}
+
+
+// Get references to elements
+  const vendorNameInput = document.getElementById('vendorName');
+  const submitButton = document.getElementById('Submit');
+  const alertMessage = document.getElementById('alertMessage');
+
+  // Function to check if the value exists in Firebase
+  function checkValueInDatabase(value) {
+    // Check if the entered value exists in Firebase
+    database.ref('vendors').orderByChild('vendorName').equalTo(value).once('value')
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          console.log('Value exists in the database');
+          alertMessage.style.display = 'block'; // Show alert message
+          submitButton.disabled = true; // Disable submit button
+        } else {
+          console.log('Value does not exist in the database');
+          alertMessage.style.display = 'none'; // Hide alert message
+          submitButton.disabled = false; // Enable submit button
+        }
+      })
+      .catch(error => {
+        console.error('Error checking value in the database:', error);
+      });
+  }
+
+  // Add an event listener to detect changes in the input field
+  vendorNameInput.addEventListener('blur', function(event) {
+    const enteredValue = event.target.value.trim();
+    checkValueInDatabase(enteredValue);
+  });
+
+</script>
+
+
+<script>
+
+    // Reference to your Firebase Realtime Database
+    const database = firebase.database();
+
+    // Reference to the "vendors" collection
+    const vendorsRef = database.ref('vendors');
+
+ document.getElementById('create-vendor-btn').addEventListener('click', function() {
+        var myModal = new bootstrap.Modal(document.getElementById('createVendorModal'));
+        myModal.show();
+    });
+
+
+    // Initialize ag-Grid
+const gridDiv = document.querySelector('#app');
+let allColumnDefs = [
+    { headerCheckboxSelection: true, checkboxSelection: true, field: "selectbox", headerName: "", minWidth: 40, maxWidth: 100, sortable: false, filter: false},
+    { headerName: "S.No", valueGetter: "node.rowIndex + 1", field: "sno", minWidth: 80, maxWidth: 100, sortable: false, filter: false},
+    { headerName: "Vendor ID", field: "vendorId", minWidth: 150, maxWidth: 150, sortable: true, filter: true, cellClass: 'vendor-id' },
+    { headerName: 'Status', field: 'status',
+        cellRenderer: params => {
+        const statusBadgeColorClass = params.data.statusBadgeColorClass;
+        return `<span class="badge ${statusBadgeColorClass}" style="padding:8px; width:80px; font-size:12px; font-weight:500;">${params.value}</span>`;
+        }, minWidth: 100, maxWidth: 120
+    },
+    { headerName: "Created On", field: "createdAt", minWidth: 150, maxWidth: 180,  sortable: true, filter: true },
+    { headerName: "Vendor", field: "vendorName", sortable: true, filter: true, minWidth: 140, maxWidth: 380},
+    { headerName: "Email", field: "email", hide: true, sortable: true, filter: true, minWidth: 140},
+    { headerName: "Mobile", field: "mobile", hide: true, sortable: true, filter: true, minWidth: 140},
+    { headerName: "Address", field: "address", hide: true, sortable: true, filter: true, minWidth: 140},
+    { headerName: "Country", field: "country",
+       cellRenderer: function(params) {
+            const countryValue = params.value.trim();
+            const countryCode = countryValue.split(' ')[0].toLowerCase();
+            const countryName = countryValue.substring(3).trim();
+            const countryFlag = `<span class="fi fi-${countryCode}"></span>`;
+            return `${countryFlag} ${countryName}`;
+        }, 
+        sortable: true, 
+        filter: true, minWidth: 200, maxWidth: 200
+    },
+    { headerName: "Submitter", field: "submitter", sortable: true, filter: true, minWidth: 120, maxWidth: 180},
+    { headerName: "Last Modified", field: "lastModified", sortable: true, filter: true, minWidth: 150, maxWidth: 180},
+    {
+        headerName: "Actions", 
+        cellRenderer: function(params) {
+            return '<button class="btn view-btn" style="color: #C916DE;" data-bs-toggle="modal" data-bs-target="#viewModal" data-vendor-id="' + params.data.vendorId + '"> View ..<i class="fa-regular fa-eye" style="font-size: 25px; color: #C916DE;"></i></button>';
+        },
+        headerClass: 'header-right-aligned',
+        sortable: false,
+        field: "action",
+        minWidth: 150,
+        maxWidth: 200,
+        filter: false
+    }
+];
+
+const gridOptions = {
+    columnDefs: allColumnDefs,
+    pagination: true,
+    paginationPageSize: 20,
+    rowSelection: 'multiple',
+    paginationPageSizeSelector: [20, 50, 100],
+    defaultColDef: {
+        sortable: true,
+        filter: true,
+        resizable: true,
+    },
+    suppressRowClickSelection: true,
+    quickFilterText: null,
+    onGridReady: function(params, searchText) {
+    params.api.setGridOption('quickFilterText', searchText);
+    params.api.sizeColumnsToFit();
+}
+};
+
+const gridApi = agGrid.createGrid(gridDiv, gridOptions);
+
+// Fetch data from Firebase "vendors" collection and populate ag-Grid
+vendorsRef.on('value', snapshot => {
+    const data = [];
+    snapshot.forEach(childSnapshot => {
+        const childData = childSnapshot.val();
+        const vendorIdNumericPart = parseInt(childData.vendorId.split('-')[2]);
+        let statusBadgeColorClass;
+        switch(childData.status) {
+            case "Active":
+                statusBadgeColorClass = "badge-success";
+                break;
+            case "Pending":
+                statusBadgeColorClass = "badge-warning";
+                break;
+            case "Inactive":
+                statusBadgeColorClass = "badge-danger";
+                break;
+            default:
+                statusBadgeColorClass = "";
+        }
+        const rowData = {
+            vendorId: childData.vendorId,
+            statusBadgeColorClass: statusBadgeColorClass,
+            createdAt: childData.createdAt,
+            vendorName: childData.vendorName,
+            email: childData.email,
+            mobile:childData.mobile,
+            address:childData.address,
+            countryCode: childData.countryCode,
+            country: childData.country,
+            status: childData.status,
+            submitter: childData.submitter,
+            lastModified: childData.lastModified,
+            vendorIdNumericPart: vendorIdNumericPart
+        };
+        data.push(rowData);
+    });
+    data.sort((a, b) => b.vendorIdNumericPart - a.vendorIdNumericPart);
+    gridApi.setGridOption('rowData', data);
+
+    // JavaScript for filtering data based on tabs and toggling active state
+    document.querySelectorAll('.tab-button').forEach(tabButton => {
+        tabButton.addEventListener('click', () => {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active-tab'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            tabButton.classList.add('active');
+            tabButton.classList.add('active-tab');
+
+            const status = tabButton.dataset.status;
+            const filteredData = data.filter(row => row.status === status || status === 'all');
+            gridApi.setRowData(filteredData);
+            tabButton.querySelector('.row-count').textContent = filteredData.length;
+        });
+    });
+
+    document.querySelectorAll('.tab-button').forEach(tabButton => {
+        const status = tabButton.dataset.status;
+        const initialFilteredData = data.filter(row => row.status === status || status === 'all');
+        tabButton.querySelector('.row-count').textContent = initialFilteredData.length;
+
+        const defaultActiveTab = document.querySelector('.tab-button.active');
+        defaultActiveTab.classList.add('active-tab');
+    });
+});
+
+
+// Function to update column visibility based on user selection
+function updateColumnVisibility() {
+    const alwaysVisibleColumns = ['selectbox', 'sno', 'action']; // Add column field names that should always be visible
+    const selectedColumns = Array.from(document.querySelectorAll('#columnSelectionMenu input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+    const newColumnDefs = allColumnDefs.map(colDef => {
+        if (alwaysVisibleColumns.includes(colDef.field)) {
+            return { ...colDef, hide: false };
+        }
+        return {
+            ...colDef,
+            hide: !selectedColumns.includes(colDef.field)
+        };
+    });
+    gridApi.setColumnDefs(newColumnDefs);
+}
+
+// Populate column selection dropdown
+allColumnDefs.forEach(colDef => {
+    if (colDef.field && !['selectbox', 'sno', 'action'].includes(colDef.field)) { // Exclude mandatory columns
+        const li = document.createElement('li');
+        
+        // Creating the checkbox element
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = colDef.field;
+        checkbox.checked = !colDef.hide;
+        checkbox.style.marginLeft = '10px'; // Adding margin-right for spacing
+        checkbox.style.transform = 'scale(1.2)'; // Increasing the size of the checkbox
+        checkbox.addEventListener('change', updateColumnVisibility);
+
+        // Creating the label element for the checkbox
+        const label = document.createElement('label');
+        label.textContent = colDef.headerName;
+        label.style.marginLeft = '10px';
+
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        document.getElementById('columnSelectionMenu').appendChild(li);
+    }
+});
+
+// Export to CSV
+document.querySelector('#export-csv-btn').addEventListener('click', function() {
+    gridApi.exportDataAsCsv();
+});
+
+// Search functionality
+document.querySelector('#search-input').addEventListener('input', function() {
+    const searchText = this.value;
+    gridApi.setQuickFilter(searchText);
+});
+
+// Resize event listener
+window.addEventListener('resize', function() {
+    setTimeout(function() {
+        gridApi.sizeColumnsToFit();
+    });
+});
+
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Add an event listener to the modal shown event
+    $('#viewModal').on('shown.bs.modal', function (e) {
+        // Get the button that triggered the modal
+        var button = e.relatedTarget;
+        // Get the vendorId from the data attribute
+        var vendorId = button.getAttribute('data-vendor-id');
+        // Update the vendor ID in the modal
+        document.getElementById('vendorId').innerHTML = 'Vendor ID: ' + vendorId;
+
+        // Fetch additional data from Firebase based on vendorId
+        var vendorsRef = firebase.database().ref('vendors');
+        vendorsRef.orderByChild('vendorId').equalTo(vendorId).once('value').then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var vendorData = childSnapshot.val();
+                // Update modal with additional data
+                document.getElementById('vendorName').innerHTML =  vendorData.vendorName;
+                document.getElementById('vendorMobile').innerHTML = vendorData.mobile;
+                // Add more fields as needed
+            });
+        });
+    });
+});
+</script>
+
+
+
+
+<script>
+  let arrow = document.querySelectorAll(".arrow");
+  for (var i = 0; i < arrow.length; i++) {
+    arrow[i].addEventListener("click", (e)=>{
+      let arrowParent = e.target.parentElement.parentElement; // selecting main parent of arrow
+      arrowParent.classList.toggle("showMenu");
+    });
+  }
+
+  let sidebar = document.querySelector(".sidebar");
+
+  sidebar.addEventListener("mouseenter", toggleSidebar);
+  sidebar.addEventListener("mouseleave", closeSidebar);
+
+  function toggleSidebar() {
+    sidebar.classList.toggle("close");
+  }
+
+  function closeSidebar() {
+    sidebar.classList.add("close");
+  }
+</script>
+
+
+
+
+
+  <script>
+
+// Listen for click event on the button
+document.querySelector('#mark-active').addEventListener('click', function() {
+    // Get selected rows from the ag-Grid table
+    const selectedRows = gridApi.getSelectedRows();
+
+    // Extract vendor IDs from selected rows
+    const vendorIdsToUpdate = selectedRows.map(row => row.vendorId);
+
+    // Iterate through each vendor object to update status
+    vendorsRef.once('value', snapshot => {
+        snapshot.forEach(childSnapshot => {
+            const vendorData = childSnapshot.val();
+            const vendorKey = childSnapshot.key;
+
+            // Check if the vendor ID matches any of the selected vendor IDs
+            if (vendorIdsToUpdate.includes(vendorData.vendorId)) {
+                // Update the status field for the matched vendor
+                vendorsRef.child(vendorKey).update({
+                    status: 'Active'
+                }).then(() => {
+                   
+                }).catch(error => {
+                   
+                });
+            }
+        });
+    }).catch(error => {
+       
+    });
+});
+
+
+// Listen for click event on the button
+document.querySelector('#mark-Inactive').addEventListener('click', function() {
+    // Get selected rows from the ag-Grid table
+    const selectedRows = gridApi.getSelectedRows();
+
+    // Extract vendor IDs from selected rows
+    const vendorIdsToUpdate = selectedRows.map(row => row.vendorId);
+
+    // Iterate through each vendor object to update status
+    vendorsRef.once('value', snapshot => {
+        snapshot.forEach(childSnapshot => {
+            const vendorData = childSnapshot.val();
+            const vendorKey = childSnapshot.key;
+
+            // Check if the vendor ID matches any of the selected vendor IDs
+            if (vendorIdsToUpdate.includes(vendorData.vendorId)) {
+                // Update the status field for the matched vendor
+                vendorsRef.child(vendorKey).update({
+                    status: 'Inactive'
+                }).then(() => {
+                   
+                }).catch(error => {
+                    
+                });
+            }
+        });
+    }).catch(error => {
+        
+    });
+});
+
+document.querySelector('#delete').addEventListener('click', function() {
+    const selectedRows = gridApi.getSelectedRows();
+
+    const vendorIdsToDelete = selectedRows.map(row => row.vendorId);
+
+    vendorsRef.once('value', snapshot => {
+        snapshot.forEach(childSnapshot => {
+            const vendorData = childSnapshot.val();
+            const vendorKey = childSnapshot.key;
+
+            if (vendorIdsToDelete.includes(vendorData.vendorId)) {
+                // Remove the matched vendor
+                vendorsRef.child(vendorKey).remove().then(() => {
+            
+                }).catch(error => {
+                    
+                });
+            }
+        });
+    }).catch(error => {
+    
+    });
+});
+
+
+
+</script>
+
+
+<script>
+
+gridApi.addEventListener('selectionChanged', function() {
+    const selectedRows = gridApi.getSelectedRows();
+    const editButton = document.querySelector('#edit');
+
+    if (selectedRows.length !== 1) {
+        // If more than one row is selected, disable edit
+        editButton.disabled = true;
+    } else {
+        editButton.disabled = false;
+    }
+});
+
+// Get the edit button
+    const editBtn = document.getElementById("edit");
+
+    // Get the input field for vendorID
+    const vendorIdInput = document.getElementById("vendor-id-input");
+
+    // Add event listener for the edit button
+    editBtn.addEventListener("click", function() {
+      const selectedRows = gridApi.getSelectedRows();
+      if (selectedRows.length > 0) {
+        const vendorID = selectedRows[0].vendorId;
+        vendorIdInput.value = vendorID;
+
+         // Fetch vendor details from Firebase
+        fetchVendorDetails(vendorID);
+        // Open the modal
+        jQuery('#editModal').modal('show');
+      } else {
+        alert("Please select a row to edit.");
+      }
+    });
+
+// Function to fetch vendor details from Firebase Realtime Database
+function fetchVendorDetails(vendorID) {
+    // Assuming you have initialized Firebase before this point
+    // Replace 'yourFirebaseDatabaseURL' with your actual Firebase Realtime Database URL
+    const firebaseRef = firebase.database().ref('vendors');
+    
+    firebaseRef.once('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+            const vendorData = childSnapshot.val();
+            if (vendorData && vendorData.vendorId === vendorID) {
+                // Populate the modal fields with fetched data
+                document.getElementById('vendor-name-input').value = vendorData.vendorName;
+                document.getElementById('email-input').value = vendorData.email;
+                document.getElementById('mobile-input').value = vendorData.mobile;
+                document.getElementById('address-input').value = vendorData.address;
+                document.getElementById('pincode-input').value = vendorData.pincode;
+                // Add similar lines for other fields
+                return; // Stop iterating once the correct vendor is found
+            }
+        });
+    });
+}
+
+// Add event listener for the save button
+document.getElementById("save-btn").addEventListener("click", function() {
+    const vendorID = document.getElementById('vendor-id-input').value;
+
+    // Get current date and time
+    const currentDate = new Date();
+    const lastformattedDate = `${currentDate.getDate().toString().padStart(2, '0')}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getFullYear()} ${currentDate.getHours().toString().padStart(2, '0')}:${currentDate.getMinutes().toString().padStart(2, '0')}`;
+
+    // Gather updated data from modal fields
+    const newData = {
+        vendorName: document.getElementById('vendor-name-input').value,
+        email: document.getElementById('email-input').value,
+        mobile: document.getElementById('mobile-input').value,
+        address: document.getElementById('address-input').value,
+        pincode: document.getElementById('pincode-input').value,
+        lastModified: lastformattedDate // Add current date and time
+    };
+
+    // Save changes to Firebase
+    saveChanges(vendorID, newData);
+
+    // Close the modal
+    $('#editModal').modal('hide');
+});
+
+
+// Function to save changes to Firebase Realtime Database
+function saveChanges(vendorID, newData) {
+    // Assuming you have initialized Firebase before this point
+    const firebaseRef = firebase.database().ref('vendors');
+
+    firebaseRef.once('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+            const key = childSnapshot.key;
+            const vendorData = childSnapshot.val();
+            if (vendorData && vendorData.vendorId === vendorID) {
+                // Update the data under the specific vendor's key
+                firebaseRef.child(key).update(newData, function(error) {
+                    if (error) {
+                    } else {
+                    }
+                });
+                return; // Stop iterating once the correct vendor is found
+            }
+        });
+    });
+}
+  
+</script>
+
+
+<style>
+
+ /* Google Fonts Import Link */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #E9F5FF;
+}
+
+.logo {
+    margin-top: -20px;
+    margin-bottom: 10px; /* Adjust margin as needed */
+    width: 100%;
+    text-align:center;
+    border-bottom: 1px solid white;
+}
+
+label {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.header{
+ padding-bottom: 16px;   
+ border-bottom: 1px solid #A1A1A1;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 100%;
+    background-color: #080C1E;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    transition: width 0.3s;
+}
+
+.sidebar .icon {
+    color: initial; /* set your initial icon color */
+    padding: 12px; /* adjust padding as necessary */
+    border-radius: 10%; /* to make the background circular */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar .icon:hover {
+    background-color: #9517AF;
+    color: white;
+}
+
+/* Add this CSS */
+.sidebar .icon.active {
+    background-color: #9517AF;
+    color: white;
+}
+
+
+.icon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70px;
+}
+
+.icon-container .icon {
+    font-size: 24px;
+    color: white;
+    margin: 20px 0;
+    cursor: pointer;
+}
+
+.extended-sidebar {
+    position: absolute;
+    top: 0;
+    left: 70px;
+    width: 0;
+    height: 100%;
+    background-color: white;
+    overflow: hidden;
+    transition: width 0.3s;
+}
+
+.extended-sidebar .content {
+    display: none;
+    padding-left: 20px;
+    padding-right: 10px;
+    padding-top: 20px;
+}
+
+.extended-sidebar .content ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.extended-sidebar .content ul li:hover {
+    background: #F8EAFF;
+    color: black;
+    font-weight: 600;
+}
+
+.extended-sidebar .content ul li {
+    height: 60px;
+    min-width: 100px;
+    text-align: center;
+    line-height: 60px;
+    color: #797979;
+    text-align: left;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.extended-sidebar .content ul li i {
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.extended-sidebar .content .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.extended-sidebar .content .header h2 {
+    color: black;
+    margin: 0;
+}
+
+.extended-sidebar .content .header i {
+    color: black;
+    cursor: pointer;
+}
+
+main {
+    margin-left: 70px;
+    padding-left: 10px;
+    flex-grow: 1;
+    transition: margin-left 0.3s;
+}
+
+/* Adjust main margin when sidebar is extended */
+.sidebar-open main {
+    margin-left: 370px;
+}
+
+.home-section{
+  position: relative;
+  background: #F8FCFF;
+  height: 100vh;
+  transition: all 0.5s ease;
+}
+.home-content{
+    background: #F8FCFF;
+    box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.home-section .home-content{
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+.home-section .home-content .bx-menu,
+.home-section .home-content .text{
+  color: #11101d;
+  font-size: 20px;
+}
+.home-section .home-content .bx-menu{
+  margin: 0 15px;
+  cursor: pointer;
+}
+.home-section .home-content .text{
+  font-size: 16px;
+  font-weight: 600;
+}
+    </style>
+
+    <style>
+
+    #app {
+    height: calc(100vh - 180px); /* Adjust the offset as needed */
+    width: 100%;
+  }
+
+   #app-container {
+        position: relative;
+        margin-left: 20px;
+    }
+
+.ag-cell-focus,.ag-cell-no-focus{
+  border:none !important;
+}
+/* This CSS is to not apply the border for the column having 'no-border' class */
+.no-border.ag-cell:focus{
+  border:none !important;
+  outline: none;
+}
+
+ .ag-header-cell {
+        color: #848884; /* Change text color to grey */
+        background-color: white; /* Change background color to white */
+    }
+
+    .ag-cell[col-id="vendorId"] .ag-cell-value {
+        color: pink !important;
+    }
+
+     .ag-cell-value {
+        font-size: 14px; /* Change to your desired font size */
+        color: #36454F;
+    }
+
+    .ag-root {
+       font-family: Cambria, Georgia, serif;
+    }
+
+    .vendor-id {
+    color: #C916DE;
+    font-weight: 500;
+}
+
+.header-right-aligned {
+    text-align: right;
+}
+
+</style>
+
+<style>
+
+/* CSS for tab buttons */
+#tab-container {
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; /* Border color for inactive tabs */
+    align-items: center; /* Vertically center the items */
+    background: #F8FCFF;
+    margin-left: 20px;
+}
+
+#controls-container {
+    display: flex;
+    margin-bottom: 10px;
+    background: #F8FCFF;
+    margin-left: 10px;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background-color: transparent;
+    color: #A4A4A4;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    border-color: #D29BD8;
+    color: #060606;
+    font-weight: 700;
+}
+
+/* Style for the search input */
+#search-input {
+    padding: 4px 24px 4px 8px; /* Padding */
+    border: 1px solid #ccc; /* Border */
+    border-radius: 4px; /* Border radius */
+    font-size: 12px; /* Font size */
+    outline: none; /* Remove outline */
+    width: 300px; /* Adjust width as needed */
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+/* Badges styling */
+.tab-badge {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 15px;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  background-color: #F4F4F4;
+  color: #D39CD9;
+  margin-left: 5px;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+
+.active-tab .tab-badge {
+  color: #68276F; /* Set to your active tab color */
+  font-weight: 700;
+}
+
+
+.view-by {
+    color: grey;
+    margin-right: 10px;
+    font-size: 14px; /* Adjust as needed for spacing */
+    text-align:center;
+    margin-left: 10px;
+}
+
+#create-vendor-btn {
+    float: right;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+</style>
+
+<style>
+{
+scrollbar-width: auto;
+scrollbar-color: #8f54a0 #ffffff;
+  }
+
+
+    /* For Webkit-based browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 5px; /* width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background-color: white; /* color of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #F9ECFF; /* color of the scrollbar handle */
+  border-radius: 4px; /* roundness of the scrollbar handle */
+}
+
+::-webkit-scrollbar:horizontal{
+  height: 8px;
+  background-color: white;
+}
+::-webkit-scrollbar-thumb:horizontal{
+        background: #F9ECFF;
+        border-radius: 4px;
+        
+    }
+</style>
+
+
+<style>
+  #alertMessage {
+    border: 1px solid red;
+    color: red;
+    padding: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    user-select: none;
+    -moz-user-select: none; /* For Firefox */
+    -webkit-user-select: none; /* For Chrome, Safari, and Opera */
+    -ms-user-select: none; /* For Internet Explorer/Edge */
+  }
+</style>
+
+    <script>
+
+ let currentSection = '';
+
+function toggleSidebar(section) {
+    const extendedSidebar = document.getElementById("extendedSidebar");
+    const sections = ['arrow-right-to-bracket','arrow-right-from-bracket', 'user', 'cog'];
+
+    // Hide all sections initially
+    sections.forEach(sec => {
+        document.getElementById(sec + 'Content').style.display = 'none';
+    });
+
+    // Show the selected section
+    document.getElementById(section + 'Content').style.display = 'block';
+
+    const icons = document.querySelectorAll('.icon');
+    icons.forEach(icon => {
+        icon.classList.remove('active'); // Remove active class from all icons
+    });
+
+    // Add active class to the clicked icon
+    document.querySelector('.icon.fa.fa-' + section).classList.add('active');
+
+    // Open the sidebar
+    extendedSidebar.style.width = "300px";
+    document.body.classList.add('sidebar-open');
+    currentSection = section;
+}
+
+
+
+function closeSidebar() {
+    const extendedSidebar = document.getElementById("extendedSidebar");
+    extendedSidebar.style.width = "0";
+    currentSection = '';
+    document.body.classList.remove('sidebar-open');
+}
+
+
+    </script>
+
+</html>
 
